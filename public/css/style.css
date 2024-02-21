@@ -1,0 +1,195 @@
+@charset "UTF-8";
+
+html {
+	scroll-behavior: smooth;
+}
+
+*{
+    font-family: "メイリオ" ;
+}
+
+/*productlist*/
+
+h2{
+    margin: 30px 0;
+    width:400px;
+}
+
+.searchbox{
+    margin-bottom:15px; 
+    cursor: pointer;
+}
+
+.keyword{
+    width:200px;
+    height:25px;
+}
+
+.submitbtn{
+    height:25px;
+}
+
+.list-table{
+    border: 2px solid #dddddd;
+    table-layout:auto;
+    width:400px;
+    font-size:14px;
+    text-align:center;
+}
+
+.num{
+    width:40px;
+}
+
+table th{
+    text-align:center;
+    padding:2px 0; 
+}
+
+.create-btn{
+    background-color: #ffe556;
+}
+
+table td{
+    height:80px;
+    padding:20px 0;
+    text-align: center;
+    vertical-align: middle;
+}
+
+img{
+    width:auto;
+    height:auto;
+    max-width:100%;
+    max-height:100%;
+}
+
+.td-btn{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-btn{
+    background-color: #7fd9d2;
+    height:28px;
+    margin-right: 10px;
+}
+
+.delete-btn{
+    background-color: lightcoral;
+}
+
+.page{
+    display:flex;
+    justify-content:center
+}
+
+/*create*/
+.createpage{
+    border: 2px solid #dddddd;
+    width: 400px;
+    padding:20px 20px;
+    font-weight: bold;
+}
+
+.createpage label{
+    font-size: 14px;
+    margin:15px 0 0;
+}
+
+.createpage-btn{
+    margin-top: 30px;
+}
+
+.required {
+    font-size: 10px;
+    color: #cc0000;
+    vertical-align: top;
+    }
+
+/*edit*/
+.editpage{
+    border: 2px solid #dddddd;
+    width: 450px;
+    padding:10px 20px;
+}
+
+.editpage div{
+    display: flex;
+    margin:10px 0 20px;
+}
+
+.form-label{
+    font-weight: bold;
+    font-size: 14px;
+    width: 40%;
+    height:15px;
+}
+i
+.form-control{
+    width: 60%;
+    border-radius: 3px;
+    margin-left: 5px;
+}
+
+#textarea{
+    width: 120px;
+    height:35px;
+    border-radius: 3px;
+}
+
+.product-img{
+    width: 20%;
+}
+
+.img-label{
+    width:20%;
+    height:35px;
+    font-weight: bold;
+}
+
+.img-form{
+    width:60%;
+    height:35px;
+    font-size: 12px;
+}
+
+.editpage-btn{
+    margin-top: 100px;
+}
+
+/*show*/
+
+.showpage{
+    border: 2px solid #dddddd;
+    width: 400px;
+    padding:10px 20px;
+}
+
+.showproduct{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.showproduct dt{
+    font-weight: bold;
+    width: 30%;
+    margin:10px 0 15px;
+}
+
+.showproduct dd{
+    border: 1px solid #dddddd;
+    width: 70%;
+    border-radius: 3px;
+    margin:auto;
+}
+
+.text{
+    height: 80px;
+}
+
+.showpage-btn{
+    margin-top: 30px;
+}
