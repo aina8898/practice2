@@ -13,12 +13,20 @@
 
         <input type="text" name="keyword" class="keyword" placeholder="検索キーワード" value="{{ request('keyword') }}">
 
-        <select name="company" data-toggle="select">
+        <select name="company" data-toggle="select" class="companysearch">
             <option value="">メーカー名</option>
             @foreach ($companies as $company)
                 <option value="{{ $company->id }}" >{{ $company->company_name }}</option>
             @endforeach
         </select>
+
+        <div>
+          <input type="number" name="min_price" id="minPrice" placeholder="最低価格">
+          <input type="number" name="max_price" id="maxPrice" placeholder="最高価格">
+
+          <input type="number" name="min_stock" id="minStock" placeholder="最低在庫数">
+          <input type="number" name="max_stock" id="maxStock" placeholder="最高在庫数">
+        </div>  
         
         <input type="submit" value="検索" class="submitbtn">
 
@@ -30,8 +38,14 @@
                 <th class="num">ID</th>
                 <th class="img">商品画像</th>
                 <th class="name">商品名</th>
-                <th class="price">価格</th>
-                <th class="stock">在庫数</th>
+                <th class="price">価格
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'price', 'direction' => 'asc']) }}">↑</a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'price', 'direction' => 'desc']) }}">↓</a>
+                </th>
+                <th class="stock">在庫数
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'stock', 'direction' => 'asc']) }}">↑</a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'stock', 'direction' => 'desc']) }}">↓</a>
+                </th>
                 <th class="company">メーカー名</th>
                 <th><button type="button" class="create-btn"  onclick="location.href='{{ route('products.create') }}'">新規登録</button></th>
             </tr>

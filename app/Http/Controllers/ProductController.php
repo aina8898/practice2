@@ -29,7 +29,28 @@ class ProductController extends Controller
             $products->where('company_id', 'LIKE', "%{$company}%");
         }
 
-        $products = $products->paginate(3);
+        if($min_price = $request->min_price){
+            $products->where('price', '>=', $min_price);
+        }
+
+        if($max_price = $request->max_price){
+            $products->where('price', '<=', $max_price);
+        }
+
+        if($min_stock = $request->min_stock){
+            $products->where('stock', '>=', $min_stock);
+        }
+
+        if($max_stock = $request->max_stock){
+            $products->where('stock', '<=', $max_stock);
+        }
+
+        if($sort = $request->sort){
+            $direction = $request->direction == 'desc' ? 'desc' : 'asc'; 
+            $products->orderBy($sort, $direction);
+        }
+
+        $products = $products->paginate(3)->appends($request->all());
 
         return view('productlists.productlist', compact('products', 'companies'));
     }
@@ -119,6 +140,7 @@ class ProductController extends Controller
             'price' => 'required',
             'stock' => 'required',
             'comment' => 'nullable', 
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $product->product_name = $request->product_name;
@@ -144,7 +166,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy( Product $product)
     {
         $product->delete();
         return redirect('/products');
