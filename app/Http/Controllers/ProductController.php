@@ -5,31 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
-        $products = Product::query();
+        $filters = $request->only([
+         'keyword', 'company', 
+         'min_price', 'max_price', 
+         'min_stock', 'max_stock', 
+         'sort', 'direction'
+        ]);
+
+        $products = Product::searchProducts($filters)->appends($request->all());
         $companies = Company::all();
-        
-        $keyword = $request->input('keyword');
-        $company = $request->input('company');
-
-        if (!empty($keyword)) {
-            $products->where('product_name', 'LIKE', "%{$keyword}%");
-        }
-
-        if (!empty($company)) {
-            $products->where('company_id', 'LIKE', "%{$company}%");
-        }
-
-        $products = $products->paginate(3);
 
         return view('productlists.productlist', compact('products', 'companies'));
     }
@@ -53,31 +44,25 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'product_name' => 'required', 
+        $validatedData = $request->validate([
+            'product_name' => 'required',
             'company_id' => 'required',
             'price' => 'required',
             'stock' => 'required',
-            'comment' => 'nullable', 
+            'comment' => 'nullable',
             'image' => 'nullable|image|max:2048',
         ]);
 
-        $product = new Product([
-            'product_name' => $request->get('product_name'),
-            'company_id' => $request->get('company_id'),
-            'price' => $request->get('price'),
-            'stock' => $request->get('stock'),
-            'comment' => $request->get('comment'),
-        ]);
-
-        if  ($request->hasFile('image')){ 
-            $filename = $request->image->getClientOriginalName();
-            $filePath = $request->image->storeAs('products', $filename, 'public');
-            $product->image = '/storage/' . $filePath;
+        DB::beginTransaction();
+        try {
+            Product::createProduct($validatedData);
+            DB::commit();
+            return redirect('products')->with('success', config('message.success.saved'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('商品登録エラー: ' . $e->getMessage());
+            return back()->with('error', config('message.errors.save_failed'));
         }
-
-        $product->save();
-        return redirect('products');
     }
 
     /**
@@ -119,23 +104,32 @@ class ProductController extends Controller
             'price' => 'required',
             'stock' => 'required',
             'comment' => 'nullable', 
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        $product->product_name = $request->product_name;
-        $product->price = $request->price;
-        $product->stock = $request->stock;
-        $product->comment = $request->comment;
+        DB::beginTransaction();
+        try {
+            $product->product_name = $request->product_name;
+            $product->price = $request->price;
+            $product->stock = $request->stock;
+            $product->comment = $request->comment;
+    
+            if ($request->hasFile('image')) {
+                $filename = $request->image->getClientOriginalName();
+                $filePath = $request->image->storeAs('products', $filename, 'public');
+                $product->image = '/storage/' . $filePath;
+            }
 
-        if ($request->hasFile('image')){ 
-            $filename = $request->image->getClientOriginalName();
-            $filePath = $request->image->storeAs('products', $filename, 'public');
-            $product->image = '/storage/' . $filePath;
+            $product->save();
+
+            DB::commit();
+            return redirect()->route('products.index')->with('success', config('message.success.updated'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('商品更新エラー: ' . $e->getMessage());
+            return back()->with('error', config('message.errors.update_failed'));
         }
 
-        $product->save();
-
-        return redirect()->route('products.index')
-            ->with('success', '商品情報を編集しました');
     }
 
     /**
@@ -146,7 +140,16 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
-        return redirect('/products');
+        DB::beginTransaction();
+        try {
+            $product->delete();
+            DB::commit();
+            return redirect('/products')->with('success', config('message.success.deleted'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('商品削除エラー: ' . $e->getMessage());
+            return back()->with('error', config('message.errors.delete_failed'));
+        }
     }
+
 }
