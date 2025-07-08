@@ -16,6 +16,7 @@ h2{
 }
 
 .searchbox{
+
     margin-bottom:15px; 
     cursor: pointer;
 }
@@ -32,7 +33,7 @@ h2{
 .list-table{
     border: 2px solid #dddddd;
     table-layout:auto;
-    width:400px;
+    width:800px;
     font-size:14px;
     text-align:center;
 }
@@ -95,7 +96,9 @@ img{
 
 .createpage label{
     font-size: 14px;
-    margin:15px 0 0;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 5px;
 }
 
 .createpage-btn{
