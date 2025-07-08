@@ -47,7 +47,7 @@ class SalesController extends Controller
 
         return response()->json([
             'message' => config('message.errors.purchase_failed'),
-            'error' => $e->getMessage() // 開発中はこの情報が役立つ
+            'error' => $e->getMessage() 
         ], 500);
     }
  }

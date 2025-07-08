@@ -12,6 +12,10 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate([
+            'keyword' => 'nullable|string|max:50',
+        ]);
+
         $filters = $request->only([
          'keyword', 'company', 
          'min_price', 'max_price', 
@@ -45,11 +49,11 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'product_name' => 'required',
+            'product_name' => 'required|string|max:100',
             'company_id' => 'required',
             'price' => 'required',
             'stock' => 'required',
-            'comment' => 'nullable',
+            'comment' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:2048',
         ]);
 
@@ -100,10 +104,10 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'product_name' => 'required',
+            'product_name' => 'required|string|max:100',
             'price' => 'required',
             'stock' => 'required',
-            'comment' => 'nullable', 
+            'comment' => 'nullable|string|max:255', 
             'image' => 'nullable|image|max:2048',
         ]);
 
